@@ -9,9 +9,15 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "axios": "^1.2.0",
+    "chart": "^0.1.2",
+    "chart.js": "^4.0.1",
+    "moment": "^2.29.4",
     "mqtt": "^4.3.7",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-chartjs-2": "^5.0.1",
+    "react-dom": "^18.2.0",
+    "ts-node": "^10.9.1"
   },
   "devDependencies": {
     "@types/react": "^18.0.24",
