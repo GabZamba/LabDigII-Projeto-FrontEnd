@@ -1,9 +1,10 @@
 {
-  "compilerOptions": {
-    "jsx": "react",
-    "composite": true,
-    "module": "ESNext",
-    "moduleResolution": "Node",
-    "allowSyntheticDefaultImports": true
-  }
+    "compilerOptions": {
+        "jsx": "react",
+        "composite": true,
+        "module": "ESNext",
+        "moduleResolution": "Node",
+        "allowSyntheticDefaultImports": true,
+        "lib": ["DOM", "DOM.Iterable", "es2015"]
+    }
 }
