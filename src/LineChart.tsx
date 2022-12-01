@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Line } from 'react-chartjs-2';
-import { intervalTimer, urlGet } from './constants';
+import { intervalTimer, urlGet, X_AXIS_LENGTH } from './constants';
 import {
     Chart,
     LineController,
@@ -34,6 +34,17 @@ type GraphData = {
     color: string;
 };
 
+type Scales = {
+    min: number;
+    max: number;
+};
+
+type CreateGraphData = {
+    title: string;
+    data: GraphData[];
+    scales: Scales;
+};
+
 const headers = {
     'content-type': 'application/json; charset=UTF-8',
 };
@@ -47,9 +58,10 @@ export const LineChart = () => {
     const [errorsCenter, setErrorsCenter] = useState([]);
     const [anglesCenter, setAnglesCenter] = useState([]);
     // const [xAxes, setXAxes] = useState([]);
-    const [xAxes, setXAxes] = useState(Array.from(Array(500).keys()));
+    const [xAxes, setXAxes] = useState(Array.from(Array(X_AXIS_LENGTH).keys()));
+    console.log(anglesCenter.length);
 
-    const [getValues, setGetValues] = useState(false);
+    const [getValues, setGetValues] = useState(true);
 
     // function which get the data via axios get method
     const getData = async () => {
@@ -72,7 +84,8 @@ export const LineChart = () => {
         let newErrorsCenter: number[] = [];
         let newAnglesCenter: number[] = [];
         // let newAxes: number[] = [];
-        // let numAxes = xAxes.length;
+        // let numAxes = xAxes[xAxes.length - 1] || -1;
+        // console.log(xAxes.length, xAxes.length - 1, numAxes);
 
         // fill the arrays with the new values
         data.forEach(({ car_distance, angle, cube_distance }) => {
@@ -84,7 +97,7 @@ export const LineChart = () => {
             newAngles.push(angle);
             newErrorsCenter.push(0);
             newAnglesCenter.push(90);
-            // newAxes.push(numAxes++);
+            // newAxes.push(++numAxes);
         });
         // concat the previous arrays to the newest ones
         newCarDistances = carDistances.concat(newCarDistances);
@@ -96,22 +109,30 @@ export const LineChart = () => {
         // newAxes = xAxes.concat(newAxes);
 
         // save the 1000 most recent values
-        const passedMaxRange = newCarDistances.length > 510;
+        const passedMaxRange = newCarDistances.length > X_AXIS_LENGTH;
         setCarDistances(
-            passedMaxRange ? newCarDistances.splice(10) : newCarDistances
+            passedMaxRange
+                ? newCarDistances.slice(-X_AXIS_LENGTH)
+                : newCarDistances
         );
         setCubeDistances(
-            passedMaxRange ? newCubeDistances.splice(10) : newCubeDistances
+            passedMaxRange
+                ? newCubeDistances.slice(-X_AXIS_LENGTH)
+                : newCubeDistances
         );
-        setErrors(passedMaxRange ? newErrors.splice(10) : newErrors);
-        setAngles(passedMaxRange ? newAngles.splice(10) : newAngles);
+        setErrors(passedMaxRange ? newErrors.slice(-X_AXIS_LENGTH) : newErrors);
+        setAngles(passedMaxRange ? newAngles.slice(-X_AXIS_LENGTH) : newAngles);
         setErrorsCenter(
-            passedMaxRange ? newErrorsCenter.splice(10) : newErrorsCenter
+            passedMaxRange
+                ? newErrorsCenter.slice(-X_AXIS_LENGTH)
+                : newErrorsCenter
         );
         setAnglesCenter(
-            passedMaxRange ? newAnglesCenter.splice(10) : newAnglesCenter
+            passedMaxRange
+                ? newAnglesCenter.slice(-X_AXIS_LENGTH)
+                : newAnglesCenter
         );
-        // setXAxes(passedMaxRange ? newAxes.splice(10) : newAxes);
+        // setXAxes(passedMaxRange ? newAxes.slice(-X_AXIS_LENGTH) : newAxes);
 
         return;
     };
@@ -136,40 +157,69 @@ export const LineChart = () => {
         return () => clearInterval(interval);
     }, [clearData, getValues]);
 
-    const createGraph = (title: string, dataset: GraphData[]) => (
-        <Line
-            style={{ margin: '20px' }}
-            data={{
-                labels: xAxes,
-                datasets: dataset.map(({ label, data, color }) => ({
-                    label,
-                    data,
-                    borderColor: color,
-                    fill: false,
-                })),
-            }}
-            options={{
-                responsive: true,
-                plugins: {
-                    legend: { display: true, position: 'top' },
-                    title: { display: true, text: title },
-                },
-            }}
-        />
-    );
+    const createGraph = ({ title, data, scales }: CreateGraphData) => {
+        return (
+            <Line
+                style={{ margin: '20px', width: '' }}
+                data={{
+                    labels: xAxes,
+                    datasets: data.map(({ label, data, color }) => ({
+                        label,
+                        data,
+                        borderColor: color,
+                        fill: false,
+                    })),
+                }}
+                options={{
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top',
+                            align: 'center',
+                        },
+                        title: { display: true, text: title },
+                    },
+                    scales: {
+                        x: {
+                            min: 0,
+                            max: X_AXIS_LENGTH,
+                            ticks: {
+                                autoSkip: true,
+                                stepSize: 20,
+                            },
+                        },
+                        y: scales,
+                    },
+                }}
+            />
+        );
+    };
 
-    const distanceGraphData = [
-        { label: 'Distância Carro', data: carDistances, color: '#3cba9f' },
-        { label: 'Distância Cubo', data: cubeDistances, color: '#3e95cd' },
-    ];
-    const errorGraphData = [
-        { label: 'Erro', data: errors, color: '#c45850' },
-        { label: 'Zero', data: errorsCenter, color: '#ffffff' },
-    ];
-    const angleGraphData = [
-        { label: 'Ângulo', data: angles, color: '#8e5ea2' },
-        { label: '90°', data: anglesCenter, color: '#ffffff' },
-    ];
+    const distanceGraphData = {
+        title: 'Distâncias ao longo do tempo',
+        data: [
+            { label: 'Distância Carro', data: carDistances, color: '#3cba9f' },
+            { label: 'Distância Cubo', data: cubeDistances, color: '#3e95cd' },
+        ],
+        scales: { min: 0, max: 440 },
+    };
+    const errorGraphData = {
+        title: 'Erro ao longo do tempo',
+        data: [
+            { label: 'Erro', data: errors, color: '#c45850' },
+            { label: 'Zero', data: errorsCenter, color: '#ffffff' },
+        ],
+        scales: { min: -400, max: 400 },
+    };
+    const angleGraphData = {
+        title: 'Ângulo ao longo do tempo',
+        data: [
+            { label: 'Ângulo', data: angles, color: '#8e5ea2' },
+            { label: '90°', data: anglesCenter, color: '#ffffff' },
+        ],
+        scales: { min: 20, max: 160 },
+    };
 
     return (
         <div className="chart-container">
@@ -182,9 +232,9 @@ export const LineChart = () => {
             <button style={{ margin: '20px' }} onClick={() => clearData()}>
                 Limpar dados
             </button>
-            {createGraph('Distâncias ao longo do tempo', distanceGraphData)}
-            {createGraph('Erro ao longo do tempo', errorGraphData)}
-            {createGraph('Ângulo ao longo do tempo', angleGraphData)}
+            {createGraph(distanceGraphData)}
+            {createGraph(errorGraphData)}
+            {createGraph(angleGraphData)}
         </div>
     );
 };

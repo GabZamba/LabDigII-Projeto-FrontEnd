@@ -1,6 +1,5 @@
 import axios from 'axios';
 import React, { useState } from 'react';
-
 import { Box, Slider } from '@mui/material';
 import { urlSend } from './constants';
 
@@ -22,9 +21,10 @@ export const SliderElement = () => {
         });
         return;
     };
+    const numFormatter = (value: number) => 440 - value;
 
     return (
-        <Box width={'100%'}>
+        <Box width={'600px'} style={{ margin: 'auto' }}>
             <Slider
                 // size="small"
                 defaultValue={70}
@@ -34,6 +34,7 @@ export const SliderElement = () => {
                 marks
                 min={10}
                 max={430}
+                valueLabelFormat={(value) => <div>{numFormatter(value)}</div>}
                 onChange={(event, value: number) => sendData(value)}
             />
         </Box>
