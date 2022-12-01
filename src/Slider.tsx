@@ -15,10 +15,10 @@ export const SliderElement = () => {
         if (isNaN(value) || value === cubeDistanceSliderValue) return;
         setCubeDistanceSliderValue(value);
 
-        await axios.get(urlSend, {
-            headers,
-            params: { dist: value },
-        });
+        await axios.post(
+            urlSend, 
+            { headers, body: value }
+        );
         return;
     };
     const numFormatter = (value: number) => 440 - value;
