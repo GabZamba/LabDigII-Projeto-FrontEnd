@@ -9,8 +9,10 @@ import {
     PointElement,
     LinearScale,
     Title,
+    Legend,
     CategoryScale,
 } from 'chart.js';
+import { max } from 'moment';
 
 Chart.register(
     LineController,
@@ -18,7 +20,8 @@ Chart.register(
     PointElement,
     LinearScale,
     Title,
-    CategoryScale
+    CategoryScale,
+    Legend
 );
 
 type RequestData = {
@@ -42,7 +45,7 @@ type Scales = {
 type CreateGraphData = {
     title: string;
     data: GraphData[];
-    scales: Scales;
+    scales?: Scales;
 };
 
 const headers = {
@@ -59,7 +62,6 @@ export const LineChart = () => {
     const [anglesCenter, setAnglesCenter] = useState([]);
     // const [xAxes, setXAxes] = useState([]);
     const [xAxes, setXAxes] = useState(Array.from(Array(X_AXIS_LENGTH).keys()));
-    console.log(anglesCenter.length);
 
     const [getValues, setGetValues] = useState(true);
 
@@ -91,14 +93,15 @@ export const LineChart = () => {
         data.forEach(({ car_distance, angle, cube_distance }) => {
             if (isNaN(car_distance + angle + cube_distance)) return;
 
-            newCarDistances.push(car_distance);
-            newCubeDistances.push(cube_distance - 20);
+            newCarDistances.push(car_distance - 20);
+            newCubeDistances.push(cube_distance);
             newErrors.push(car_distance - cube_distance + 20);
             newAngles.push(angle);
             newErrorsCenter.push(0);
             newAnglesCenter.push(90);
             // newAxes.push(++numAxes);
         });
+
         // concat the previous arrays to the newest ones
         newCarDistances = carDistances.concat(newCarDistances);
         newCubeDistances = cubeDistances.concat(newCubeDistances);
@@ -186,10 +189,10 @@ export const LineChart = () => {
                             max: X_AXIS_LENGTH,
                             ticks: {
                                 autoSkip: true,
-                                stepSize: 20,
+                                maxTicksLimit: X_AXIS_LENGTH / 20,
                             },
                         },
-                        y: scales,
+                        ...(scales && { y: scales }),
                     },
                 }}
             />
@@ -199,8 +202,8 @@ export const LineChart = () => {
     const distanceGraphData = {
         title: 'Distâncias ao longo do tempo',
         data: [
-            { label: 'Distância Carro', data: carDistances, color: '#3cba9f' },
-            { label: 'Distância Cubo', data: cubeDistances, color: '#3e95cd' },
+            { label: 'Distância Carro', data: carDistances, color: 'blue' },
+            { label: 'Distância Cubo', data: cubeDistances, color: 'green' },
         ],
         scales: { min: 0, max: 440 },
     };
@@ -208,15 +211,15 @@ export const LineChart = () => {
         title: 'Erro ao longo do tempo',
         data: [
             { label: 'Erro', data: errors, color: '#c45850' },
-            { label: 'Zero', data: errorsCenter, color: '#ffffff' },
+            { label: 'Zero', data: errorsCenter, color: '#bbbbbb' },
         ],
-        scales: { min: -400, max: 400 },
+        // scales: { min: -400, max: 400 },
     };
     const angleGraphData = {
         title: 'Ângulo ao longo do tempo',
         data: [
             { label: 'Ângulo', data: angles, color: '#8e5ea2' },
-            { label: '90°', data: anglesCenter, color: '#ffffff' },
+            { label: '90°', data: anglesCenter, color: '#bbbbbb' },
         ],
         scales: { min: 20, max: 160 },
     };

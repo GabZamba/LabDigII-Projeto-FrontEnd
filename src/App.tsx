@@ -7,7 +7,7 @@ import { SliderElement } from './Slider';
 function App() {
     return (
         <div className="App">
-            <Drawing></Drawing>
+            {/* <Drawing></Drawing> */}
             <SliderElement></SliderElement>
             <LineChart></LineChart>
         </div>

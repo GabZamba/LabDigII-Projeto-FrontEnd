@@ -12,31 +12,37 @@ export const SliderElement = () => {
     const [cubeDistanceSliderValue, setCubeDistanceSliderValue] = useState(70);
 
     const sendData = async (value: number) => {
-        if (isNaN(value) || value === cubeDistanceSliderValue) return;
-        setCubeDistanceSliderValue(value);
+        const cubeDistance = 440 - value;
+        if (isNaN(cubeDistance) || cubeDistance === cubeDistanceSliderValue)
+            return;
+        setCubeDistanceSliderValue(cubeDistance);
 
-        await axios.post(
-            urlSend, 
-            { headers, body: value }
-        );
+        await axios.post(urlSend, { headers, body: cubeDistance });
         return;
     };
     const numFormatter = (value: number) => 440 - value;
 
     return (
-        <Box width={'600px'} style={{ margin: 'auto' }}>
-            <Slider
-                // size="small"
-                defaultValue={70}
-                aria-label="Small"
-                valueLabelDisplay="auto"
-                step={10}
-                marks
-                min={10}
-                max={430}
-                valueLabelFormat={(value) => <div>{numFormatter(value)}</div>}
-                onChange={(event, value: number) => sendData(value)}
-            />
-        </Box>
+        <div>
+            <h2 style={{ color: '#000000' }}>
+                Selecione abaixo a posição do cubo virtual desejada
+            </h2>
+            <Box width={'600px'} style={{ margin: 'auto' }}>
+                <Slider
+                    // size="small"
+                    defaultValue={70}
+                    aria-label="Small"
+                    valueLabelDisplay="auto"
+                    step={10}
+                    marks
+                    min={10}
+                    max={430}
+                    valueLabelFormat={(value) => (
+                        <div>{numFormatter(value)}</div>
+                    )}
+                    onChange={(event, value: number) => sendData(value)}
+                />
+            </Box>
+        </div>
     );
 };
