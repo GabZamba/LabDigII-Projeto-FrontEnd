@@ -1,17 +1,13 @@
 import axios from 'axios';
 import React, { useState } from 'react';
 import { Box, Slider } from '@mui/material';
-import { urlSend } from './constants';
-
-const headers = {
-    'content-type': 'application/json; charset=UTF-8',
-};
+import { headers, urlSend } from './constants';
 
 export const SliderElement = () => {
-    // define initial state of the graph values
     const [cubeDistanceSliderValue, setCubeDistanceSliderValue] = useState(370);
 
-    const sendData = async (value: number) => {
+    const sendData = async (value: number | number[]) => {
+        if (Array.isArray(value)) return;
         const cubeDistance = 440 - value;
         if (isNaN(cubeDistance) || cubeDistance === cubeDistanceSliderValue)
             return;
@@ -43,7 +39,7 @@ export const SliderElement = () => {
                     valueLabelFormat={(value) => (
                         <div>{numFormatter(value)}</div>
                     )}
-                    onChange={(event, value: number) => sendData(value)}
+                    onChangeCommitted={(event, value) => sendData(value)}
                 />
             </Box>
         </div>
