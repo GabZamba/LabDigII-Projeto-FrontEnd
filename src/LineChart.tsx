@@ -38,8 +38,9 @@ type GraphData = {
 };
 
 type Scales = {
-    min: number;
-    max: number;
+    min?: number;
+    max?: number;
+    suggestedMax?: number;
 };
 
 type CreateGraphData = {
@@ -61,8 +62,8 @@ export const LineChart = () => {
     const [angles, setAngles] = useState([]);
     const [errorsCenter, setErrorsCenter] = useState([]);
     const [anglesCenter, setAnglesCenter] = useState([]);
-    // const [xAxes, setXAxes] = useState([]);
-    const [xAxes, setXAxes] = useState(Array.from(Array(X_AXIS_LENGTH).keys()));
+    const [xAxes, setXAxes] = useState([]);
+    // const [xAxes, setXAxes] = useState(Array.from(Array(X_AXIS_LENGTH).keys()));
 
     const [latestDataTime, setLatestDataTime] = useState(
         new Date().toISOString()
@@ -89,8 +90,8 @@ export const LineChart = () => {
         let newAngles = [...angles];
         let newErrorsCenter = [...errorsCenter];
         let newAnglesCenter = [...anglesCenter];
-        // let newAxes = [];
-        // let numAxes = xAxes[xAxes.length - 1] || -1;
+        let newAxes = [...xAxes];
+        let numAxes = xAxes[xAxes.length - 1] || -1;
 
         // sort the data based on time
         const filteredData = requestData
@@ -105,33 +106,41 @@ export const LineChart = () => {
 
             newCarDistances.push(car_distance - 20);
             newCubeDistances.push(cube_distance);
-            newErrors.push(car_distance - cube_distance + 20);
+            newErrors.push(car_distance - cube_distance - 20);
             newAngles.push(angle);
             newErrorsCenter.push(0);
             newAnglesCenter.push(90);
-            // newAxes.push(++numAxes);
+            newAxes.push(++numAxes);
             latestTime = time;
         });
         setLatestDataTime(latestTime);
 
         // save the X_AXIS_LENGTH most recent values
-        const willSlice = newCarDistances.length > X_AXIS_LENGTH;
-        const sliceSize = filteredData.length;
-        setCarDistances(
-            willSlice ? newCarDistances.slice(sliceSize) : newCarDistances
-        );
-        setCubeDistances(
-            willSlice ? newCubeDistances.slice(sliceSize) : newCubeDistances
-        );
-        setErrors(willSlice ? newErrors.slice(sliceSize) : newErrors);
-        setAngles(willSlice ? newAngles.slice(sliceSize) : newAngles);
-        setErrorsCenter(
-            willSlice ? newErrorsCenter.slice(sliceSize) : newErrorsCenter
-        );
-        setAnglesCenter(
-            willSlice ? newAnglesCenter.slice(sliceSize) : newAnglesCenter
-        );
-        // setXAxes(willSlice ? newAxes.slice(-X_AXIS_LENGTH) : newAxes);
+        // const willSlice = newCarDistances.length > X_AXIS_LENGTH;
+        // const sliceSize = filteredData.length;
+        // setCarDistances(
+        //     willSlice ? newCarDistances.slice(sliceSize) : newCarDistances
+        // );
+        // setCubeDistances(
+        //     willSlice ? newCubeDistances.slice(sliceSize) : newCubeDistances
+        // );
+        // setErrors(willSlice ? newErrors.slice(sliceSize) : newErrors);
+        // setAngles(willSlice ? newAngles.slice(sliceSize) : newAngles);
+        // setErrorsCenter(
+        //     willSlice ? newErrorsCenter.slice(sliceSize) : newErrorsCenter
+        // );
+        // setAnglesCenter(
+        //     willSlice ? newAnglesCenter.slice(sliceSize) : newAnglesCenter
+        // );
+        // setXAxes(willSlice ? newAxes.slice(sliceSize) : newAxes);
+
+        setCarDistances(newCarDistances);
+        setCubeDistances(newCubeDistances);
+        setErrors(newErrors);
+        setAngles(newAngles);
+        setErrorsCenter(newErrorsCenter);
+        setAnglesCenter(newAnglesCenter);
+        setXAxes(newAxes);
 
         return;
     };
@@ -143,7 +152,7 @@ export const LineChart = () => {
         setErrorsCenter([]);
         setAngles([]);
         setAnglesCenter([]);
-        // setXAxes([]);
+        setXAxes([]);
     };
 
     // will get the data every 3 seconds
@@ -159,10 +168,10 @@ export const LineChart = () => {
     const distanceGraphData = {
         title: 'Distâncias ao longo do tempo',
         data: [
-            { label: 'Distância Carro', data: carDistances, color: 'blue' },
-            { label: 'Distância Cubo', data: cubeDistances, color: 'green' },
+            { label: 'Distância Carro', data: carDistances, color: '#0099ff' },
+            { label: 'Distância Cubo', data: cubeDistances, color: '#53ff00' },
         ],
-        scales: { min: 0, max: 440 },
+        scales: { min: 0, suggestedMax: 440 },
     };
     const errorGraphData = {
         title: 'Erro ao longo do tempo',
@@ -228,10 +237,10 @@ const createGraph = (
                 scales: {
                     x: {
                         min: 0,
-                        max: X_AXIS_LENGTH,
+                        // max: X_AXIS_LENGTH,
                         ticks: {
                             autoSkip: true,
-                            maxTicksLimit: X_AXIS_LENGTH / 20,
+                            // maxTicksLimit: X_AXIS_LENGTH / 20,
                         },
                     },
                     ...(scales && { y: scales }),
