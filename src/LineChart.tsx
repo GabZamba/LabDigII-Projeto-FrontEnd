@@ -28,7 +28,7 @@ type RequestData = {
     car_distance: number;
     angle: number;
     cube_distance: number;
-    time: Date;
+    time: string;
 };
 
 type GraphData = {
@@ -53,6 +53,7 @@ const headers = {
 };
 
 export const LineChart = () => {
+    const [getValues, setGetValues] = useState(true);
     // define initial state of the graph values
     const [carDistances, setCarDistances] = useState([]);
     const [cubeDistances, setCubeDistances] = useState([]);
@@ -63,7 +64,9 @@ export const LineChart = () => {
     // const [xAxes, setXAxes] = useState([]);
     const [xAxes, setXAxes] = useState(Array.from(Array(X_AXIS_LENGTH).keys()));
 
-    const [getValues, setGetValues] = useState(true);
+    const [latestDataTime, setLatestDataTime] = useState(
+        new Date().toISOString()
+    );
 
     // function which get the data via axios get method
     const getData = async () => {
@@ -75,22 +78,29 @@ export const LineChart = () => {
     };
 
     // function which treats the data received via getData function
-    const treatData = (data: RequestData[]) => {
-        if (!data) return;
+    const treatData = (requestData: RequestData[]) => {
+        if (!requestData) return;
+        let latestTime = latestDataTime;
 
-        // create the arrays which will be used
-        let newCarDistances: number[] = [];
-        let newCubeDistances: number[] = [];
-        let newErrors: number[] = [];
-        let newAngles: number[] = [];
-        let newErrorsCenter: number[] = [];
-        let newAnglesCenter: number[] = [];
-        // let newAxes: number[] = [];
+        // create copies of the useState arrays
+        let newCarDistances = [...carDistances];
+        let newCubeDistances = [...cubeDistances];
+        let newErrors = [...errors];
+        let newAngles = [...angles];
+        let newErrorsCenter = [...errorsCenter];
+        let newAnglesCenter = [...anglesCenter];
+        // let newAxes = [];
         // let numAxes = xAxes[xAxes.length - 1] || -1;
-        // console.log(xAxes.length, xAxes.length - 1, numAxes);
 
-        // fill the arrays with the new values
-        data.forEach(({ car_distance, angle, cube_distance }) => {
+        // sort the data based on time
+        const filteredData = requestData
+            .filter(({ time }) => time > latestDataTime)
+            .sort(({ time: timeA }, { time: timeB }) => {
+                // -1 if smaller, 0 if equal, 1 if greater
+                return timeA < timeB ? -1 : Number(timeA > timeB);
+            });
+
+        filteredData.forEach(({ car_distance, angle, cube_distance, time }) => {
             if (isNaN(car_distance + angle + cube_distance)) return;
 
             newCarDistances.push(car_distance - 20);
@@ -100,42 +110,28 @@ export const LineChart = () => {
             newErrorsCenter.push(0);
             newAnglesCenter.push(90);
             // newAxes.push(++numAxes);
+            latestTime = time;
         });
+        setLatestDataTime(latestTime);
 
-        // concat the previous arrays to the newest ones
-        newCarDistances = carDistances.concat(newCarDistances);
-        newCubeDistances = cubeDistances.concat(newCubeDistances);
-        newErrors = errors.concat(newErrors);
-        newAngles = angles.concat(newAngles);
-        newErrorsCenter = errorsCenter.concat(newErrorsCenter);
-        newAnglesCenter = anglesCenter.concat(newAnglesCenter);
-        // newAxes = xAxes.concat(newAxes);
-
-        // save the 1000 most recent values
-        const passedMaxRange = newCarDistances.length > X_AXIS_LENGTH;
+        // save the X_AXIS_LENGTH most recent values
+        const willSlice = newCarDistances.length > X_AXIS_LENGTH;
+        const sliceSize = filteredData.length;
         setCarDistances(
-            passedMaxRange
-                ? newCarDistances.slice(-X_AXIS_LENGTH)
-                : newCarDistances
+            willSlice ? newCarDistances.slice(sliceSize) : newCarDistances
         );
         setCubeDistances(
-            passedMaxRange
-                ? newCubeDistances.slice(-X_AXIS_LENGTH)
-                : newCubeDistances
+            willSlice ? newCubeDistances.slice(sliceSize) : newCubeDistances
         );
-        setErrors(passedMaxRange ? newErrors.slice(-X_AXIS_LENGTH) : newErrors);
-        setAngles(passedMaxRange ? newAngles.slice(-X_AXIS_LENGTH) : newAngles);
+        setErrors(willSlice ? newErrors.slice(sliceSize) : newErrors);
+        setAngles(willSlice ? newAngles.slice(sliceSize) : newAngles);
         setErrorsCenter(
-            passedMaxRange
-                ? newErrorsCenter.slice(-X_AXIS_LENGTH)
-                : newErrorsCenter
+            willSlice ? newErrorsCenter.slice(sliceSize) : newErrorsCenter
         );
         setAnglesCenter(
-            passedMaxRange
-                ? newAnglesCenter.slice(-X_AXIS_LENGTH)
-                : newAnglesCenter
+            willSlice ? newAnglesCenter.slice(sliceSize) : newAnglesCenter
         );
-        // setXAxes(passedMaxRange ? newAxes.slice(-X_AXIS_LENGTH) : newAxes);
+        // setXAxes(willSlice ? newAxes.slice(-X_AXIS_LENGTH) : newAxes);
 
         return;
     };
@@ -159,45 +155,6 @@ export const LineChart = () => {
         // This represents the unmount function, in which you need to clear your interval to prevent memory leaks.
         return () => clearInterval(interval);
     }, [clearData, getValues]);
-
-    const createGraph = ({ title, data, scales }: CreateGraphData) => {
-        return (
-            <Line
-                style={{ margin: '20px', width: '' }}
-                data={{
-                    labels: xAxes,
-                    datasets: data.map(({ label, data, color }) => ({
-                        label,
-                        data,
-                        borderColor: color,
-                        fill: false,
-                    })),
-                }}
-                options={{
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            display: true,
-                            position: 'top',
-                            align: 'center',
-                        },
-                        title: { display: true, text: title },
-                    },
-                    scales: {
-                        x: {
-                            min: 0,
-                            max: X_AXIS_LENGTH,
-                            ticks: {
-                                autoSkip: true,
-                                maxTicksLimit: X_AXIS_LENGTH / 20,
-                            },
-                        },
-                        ...(scales && { y: scales }),
-                    },
-                }}
-            />
-        );
-    };
 
     const distanceGraphData = {
         title: 'Distâncias ao longo do tempo',
@@ -235,9 +192,51 @@ export const LineChart = () => {
             <button style={{ margin: '20px' }} onClick={() => clearData()}>
                 Limpar dados
             </button>
-            {createGraph(distanceGraphData)}
-            {createGraph(errorGraphData)}
-            {createGraph(angleGraphData)}
+            {createGraph(xAxes, distanceGraphData)}
+            {createGraph(xAxes, errorGraphData)}
+            {createGraph(xAxes, angleGraphData)}
         </div>
+    );
+};
+
+const createGraph = (
+    xAxes: number[],
+    { title, data, scales }: CreateGraphData
+) => {
+    return (
+        <Line
+            style={{ margin: '20px', width: '' }}
+            data={{
+                labels: xAxes,
+                datasets: data.map(({ label, data, color }) => ({
+                    label,
+                    data,
+                    borderColor: color,
+                    fill: false,
+                })),
+            }}
+            options={{
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top',
+                        align: 'center',
+                    },
+                    title: { display: true, text: title },
+                },
+                scales: {
+                    x: {
+                        min: 0,
+                        max: X_AXIS_LENGTH,
+                        ticks: {
+                            autoSkip: true,
+                            maxTicksLimit: X_AXIS_LENGTH / 20,
+                        },
+                    },
+                    ...(scales && { y: scales }),
+                },
+            }}
+        />
     );
 };
