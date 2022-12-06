@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/LabDigII-Software/static/css/main.8bb17f82.css",
+    "main.js": "/LabDigII-Software/static/js/main.f9dd0a23.js",
+    "index.html": "/LabDigII-Software/index.html",
+    "main.8bb17f82.css.map": "/LabDigII-Software/static/css/main.8bb17f82.css.map",
+    "main.f9dd0a23.js.map": "/LabDigII-Software/static/js/main.f9dd0a23.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.8bb17f82.css",
+    "static/js/main.f9dd0a23.js"
+  ]
+}
