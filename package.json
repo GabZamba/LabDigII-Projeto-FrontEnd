@@ -1,32 +1,36 @@
 {
-  "name": "labdigii-software",
-  "private": true,
-  "version": "0.0.0",
-  "type": "module",
-  "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview"
-  },
-  "dependencies": {
-    "@emotion/react": "^11.10.5",
-    "@emotion/styled": "^11.10.5",
-    "@mui/material": "^5.10.16",
-    "axios": "^1.2.0",
-    "chart": "^0.1.2",
-    "chart.js": "^4.0.1",
-    "moment": "^2.29.4",
-    "mqtt": "^4.3.7",
-    "react": "^18.2.0",
-    "react-chartjs-2": "^5.0.1",
-    "react-dom": "^18.2.0",
-    "ts-node": "^10.9.1"
-  },
-  "devDependencies": {
-    "@types/react": "^18.0.24",
-    "@types/react-dom": "^18.0.8",
-    "@vitejs/plugin-react": "^2.2.0",
-    "typescript": "^4.6.4",
-    "vite": "^3.2.3"
-  }
+    "name": "labdigii-software",
+    "private": true,
+    "version": "0.0.0",
+    "type": "module",
+    "scripts": {
+        "dev": "vite",
+        "build": "tsc && vite build",
+        "preview": "vite preview",
+        "predeploy": "npm run build",
+        "deploy": "gh-pages -d build"
+    },
+    "homepage": "http://GabZamba.github.io/LabDigII-Projeto-Software",
+    "dependencies": {
+        "@emotion/react": "^11.10.5",
+        "@emotion/styled": "^11.10.5",
+        "@mui/material": "^5.10.16",
+        "axios": "^1.2.0",
+        "chart": "^0.1.2",
+        "chart.js": "^4.0.1",
+        "gh-pages": "^4.0.0",
+        "moment": "^2.29.4",
+        "mqtt": "^4.3.7",
+        "react": "^18.2.0",
+        "react-chartjs-2": "^5.0.1",
+        "react-dom": "^18.2.0",
+        "ts-node": "^10.9.1"
+    },
+    "devDependencies": {
+        "@types/react": "^18.0.24",
+        "@types/react-dom": "^18.0.8",
+        "@vitejs/plugin-react": "^2.2.0",
+        "typescript": "^4.6.4",
+        "vite": "^3.2.3"
+    }
 }
