@@ -9,7 +9,7 @@ const headers = {
 
 export const SliderElement = () => {
     // define initial state of the graph values
-    const [cubeDistanceSliderValue, setCubeDistanceSliderValue] = useState(70);
+    const [cubeDistanceSliderValue, setCubeDistanceSliderValue] = useState(370);
 
     const sendData = async (value: number) => {
         const cubeDistance = 440 - value;
@@ -24,9 +24,12 @@ export const SliderElement = () => {
 
     return (
         <div>
-            <h2 style={{ color: '#000000' }}>
+            <h2 style={{ color: '#000000', textAlign: 'left' }}>
                 Selecione abaixo a posição do cubo virtual desejada
             </h2>
+            <h3 style={{ color: '#000000', textAlign: 'left' }}>
+                Posição Atual: {cubeDistanceSliderValue}
+            </h3>
             <Box width={'600px'} style={{ margin: 'auto' }}>
                 <Slider
                     // size="small"
