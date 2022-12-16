@@ -1,8 +1,8 @@
 {
-    "name": "labdigii-software",
+    "name": "labdigii-frontend",
     "version": "0.1.0",
     "private": true,
-    "homepage": "https://gabzamba.github.io/LabDigII-Projeto-Software/",
+    "homepage": "https://gabzamba.github.io/LabDigII-Projeto-FrontEnd/",
     "dependencies": {
         "@emotion/react": "^11.10.5",
         "@emotion/styled": "^11.10.5",
