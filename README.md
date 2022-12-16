@@ -1,42 +1,90 @@
+
+# Beam & Ball Brasil - FrontEnd
+
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-3-orange.svg?style=flat-square)](#contributors-)
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+[![All Contributors](https://img.shields.io/badge/all_contributors-3-orange.svg?style=flat-square)](#contribuintes-)
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
-# Projeto
+# Requisitos do Projeto
 
-# Requisitos do Projeto:
-Para realizar a instalação do projetos, pressupõe-se que seu computador já apresente ???? instalado. Visite [este link](https://www.google.com.br/) para mais informações
+Para realizar a instalação do projetos, pressupõe-se que seu computador já apresente NodeJS instalado. Visite [este link](https://nodejs.org/en/download/) para mais informações
 
-# Instalação do Projeto:
+# Utilização do Projeto na Nuvem
+
+Para utilizar a versão do projeto disponível na nuvem, visite [este link](https://gabzamba.github.io/LabDigII-Projeto-FrontEnd/)!
+
+# Instalação do Projeto
 
 ## Etapa 1: Clonagem do Repositório
 
 Para instalar o projeto, será realizada a clonagem do repositório. Utilizando seu Terminal de Comando preferido, navegue até a pasta destinada ao projeto, como por exemplo:
+
 ```bash
 cd C:\Users\Usuario\Desktop\MelhorProjetoDeLabDig
 ```
+
 Para clonar utilizando o protocolo HTTPS, utilize o comando abaixo:
+
 ```bash
-git clone https://github.com/GabZamba/LabDigII-Projeto-Software.git
+git clone https://github.com/GabZamba/LabDigII-Projeto-FrontEnd.git
 ```
+
 Para clonar utilizando o protocolo SSH, utilize o comando abaixo:
+
 ```bash
-git clone git@github.com:GabZamba/LabDigII-Projeto-Software.git
+git clone git@github.com:GabZamba/LabDigII-Projeto-FrontEnd.git
 ```
 
+## Etapa 2: Instalando as Dependências
 
-## Etapa 2:  Executando o Projeto Localmente
+Após a clonagem, será realizada a instalação das dependências do projeto. Para isso, utilizando seu Terminal de Comando favorito, navegue até o diretório do projeto e execute o seguinte comando:
 
-*PARABÉNS, VOCÊ CONSEGUIU RODAR O PROJETO 🎉🎉🎉*
+```node
+npm install
+```
 
+## Etapa 3: Executando o Projeto Localmente
 
-# Contributors ✨
+Assim que a instalação das dependências encerrar, execute o seguinte comando:
 
-Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
+```node
+npm start
+```
 
-<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+Isso construirá o site localmente para você, e ele ficará disponível neste link:
+
+<http://localhost:3000/LabDigII-Projeto-FrontEnd>
+
+# Realizando o Deploy para a Nuvem
+
+Caso você deseje deployar o projeto para a nuvem, você deverá primeiramente realizar o push dos seus commits para o GitHub, e mergeá-los na branch develop.
+
+Tendo feito isso, rode localmente o seguinte comando:
+
+```node
+npm deploy
+```
+
+Após alguns minutos, voilà!, o site mergeado na develop estará presente na nuvem [neste link](https://gabzamba.github.io/LabDigII-Projeto-FrontEnd/)!
+
 <!-- prettier-ignore-start -->
 <!-- markdownlint-disable -->
+
+<br>
+
+### *PARABÉNS, VOCÊ CONSEGUIU EXECUTAR O PROJETO 🎉🎉🎉*
+
+<br>
+
+# Contribuintes ✨
+
+Agradecimentos vão às seguintes pessoas ([guia dos emojis](https://allcontributors.org/docs/en/emoji-key)):
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 <table>
   <tbody>
     <tr>
@@ -55,5 +103,4 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
-This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
-
+Esse projeto segue a especificação do [all-contributors](https://github.com/all-contributors/all-contributors). Contribuições de qualquer tipo são sempre bem-vindas!
