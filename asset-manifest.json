@@ -1,10 +1,10 @@
 {
   "files": {
-    "main.css": "/LabDigII-Projeto-Software/static/css/main.8bb17f82.css",
-    "main.js": "/LabDigII-Projeto-Software/static/js/main.839aad75.js",
-    "index.html": "/LabDigII-Projeto-Software/index.html",
-    "main.8bb17f82.css.map": "/LabDigII-Projeto-Software/static/css/main.8bb17f82.css.map",
-    "main.839aad75.js.map": "/LabDigII-Projeto-Software/static/js/main.839aad75.js.map"
+    "main.css": "/LabDigII-Projeto-FrontEnd/static/css/main.8bb17f82.css",
+    "main.js": "/LabDigII-Projeto-FrontEnd/static/js/main.839aad75.js",
+    "index.html": "/LabDigII-Projeto-FrontEnd/index.html",
+    "main.8bb17f82.css.map": "/LabDigII-Projeto-FrontEnd/static/css/main.8bb17f82.css.map",
+    "main.839aad75.js.map": "/LabDigII-Projeto-FrontEnd/static/js/main.839aad75.js.map"
   },
   "entrypoints": [
     "static/css/main.8bb17f82.css",
